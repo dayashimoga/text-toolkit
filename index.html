@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Toolkit — Word Count, Case Convert, Diff & Hash | QuickUtils</title>
+    <meta name="description" content="Free online text toolkit: word counter, character counter, case converter, text diff, Lorem Ipsum generator, hash calculator (MD5/SHA), Base64 encode/decode, and more.">
+    <meta property="og:title" content="Text Toolkit — Free Online Text Tools">
+    <meta property="og:description" content="Word counter, case converter, text diff, hash generator, and 10+ text tools in one place.">
+    <meta property="og:image" content="https://text.quickutils.top/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://text.quickutils.top/og-image.png">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+    <link rel="stylesheet" href="quickutils-core.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"Text Toolkit","url":"https://text.quickutils.top","applicationCategory":"UtilitiesApplication","description":"Free online text toolkit with 10+ tools including word counter, case converter, text diff, and hash calculator."}
+    </script>
+</head>
+<body>
+    <nav class="navbar"><div class="container nav-inner">
+        <a href="https://quickutils.top" class="brand">📝 Text Toolkit</a>
+        <div class="nav-links">
+            <a href="https://ko-fi.com/dayatin" target="_blank" class="kofi-link">☕ Support</a>
+            <button id="themeBtn" class="theme-btn">🌙</button>
+        </div>
+    </div></nav>
+
+    <main class="container" style="margin-top:1.5rem">
+        <div class="tool-tabs" id="toolTabs">
+            <button class="tab-btn active" data-tool="stats">📊 Stats</button>
+            <button class="tab-btn" data-tool="case">🔤 Case</button>
+            <button class="tab-btn" data-tool="find">🔍 Find/Replace</button>
+            <button class="tab-btn" data-tool="diff">📋 Diff</button>
+            <button class="tab-btn" data-tool="hash">🔐 Hash</button>
+            <button class="tab-btn" data-tool="encode">🔄 Encode</button>
+            <button class="tab-btn" data-tool="lorem">📜 Lorem</button>
+            <button class="tab-btn" data-tool="sort">↕️ Sort</button>
+            <button class="tab-btn" data-tool="markdown">📑 Markdown</button>
+            <button class="tab-btn" data-tool="slug">🔗 Slug</button>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="editor-area glass-card">
+            <div class="editor-header">
+                <label for="mainInput">Input Text</label>
+                <div class="editor-actions">
+                    <button class="icon-btn" id="copyBtn" title="Copy">📋</button>
+                    <button class="icon-btn" id="clearInputBtn" title="Clear">🗑</button>
+                    <button class="icon-btn" id="pasteBtn" title="Paste">📥</button>
+                </div>
+            </div>
+            <textarea id="mainInput" rows="10" placeholder="Paste or type your text here..."></textarea>
+        </div>
+
+        <!-- Stats Panel (default) -->
+        <div class="tool-panel active" id="panel-stats">
+            <div class="stats-grid">
+                <div class="stat-card glass-card"><span class="stat-value" id="statWords">0</span><span class="stat-label">Words</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statChars">0</span><span class="stat-label">Characters</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statCharsNoSpace">0</span><span class="stat-label">No Spaces</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statSentences">0</span><span class="stat-label">Sentences</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statParagraphs">0</span><span class="stat-label">Paragraphs</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statLines">0</span><span class="stat-label">Lines</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statReadTime">0m</span><span class="stat-label">Read Time</span></div>
+                <div class="stat-card glass-card"><span class="stat-value" id="statSpeakTime">0m</span><span class="stat-label">Speak Time</span></div>
+            </div>
+            <div class="glass-card mt-3" id="wordFreqPanel">
+                <h4>🔠 Word Frequency (Top 20)</h4>
+                <div id="wordFreqList" class="freq-list"></div>
+            </div>
+        </div>
+
+        <!-- Case Converter -->
+        <div class="tool-panel" id="panel-case">
+            <div class="case-btns">
+                <button class="btn btn-secondary" data-case="upper">UPPERCASE</button>
+                <button class="btn btn-secondary" data-case="lower">lowercase</button>
+                <button class="btn btn-secondary" data-case="title">Title Case</button>
+                <button class="btn btn-secondary" data-case="sentence">Sentence case</button>
+                <button class="btn btn-secondary" data-case="camel">camelCase</button>
+                <button class="btn btn-secondary" data-case="snake">snake_case</button>
+                <button class="btn btn-secondary" data-case="kebab">kebab-case</button>
+                <button class="btn btn-secondary" data-case="pascal">PascalCase</button>
+                <button class="btn btn-secondary" data-case="dot">dot.case</button>
+                <button class="btn btn-secondary" data-case="toggle">tOGGLE cASE</button>
+                <button class="btn btn-secondary" data-case="alternating">aLtErNaTiNg</button>
+            </div>
+            <div class="glass-card mt-3">
+                <label>Result</label>
+                <textarea id="caseOutput" rows="6" readonly></textarea>
+                <button class="btn btn-primary btn-sm mt-2" id="copyCaseBtn">📋 Copy Result</button>
+            </div>
+        </div>
+
+        <!-- Find & Replace -->
+        <div class="tool-panel" id="panel-find">
+            <div class="glass-card">
+                <div class="find-row">
+                    <label>Find<input type="text" id="findInput" placeholder="Search text..."></label>
+                    <label>Replace<input type="text" id="replaceInput" placeholder="Replacement..."></label>
+                </div>
+                <div class="find-options">
+                    <label class="checkbox-label"><input type="checkbox" id="findCase"> Case Sensitive</label>
+                    <label class="checkbox-label"><input type="checkbox" id="findRegex"> Regex</label>
+                    <label class="checkbox-label"><input type="checkbox" id="findAll" checked> Replace All</label>
+                </div>
+                <button class="btn btn-primary" id="replaceBtn">Replace</button>
+                <span class="text-muted ml-2" id="findCount"></span>
+            </div>
+            <div class="glass-card mt-3">
+                <label>Result</label>
+                <textarea id="findOutput" rows="6" readonly></textarea>
+            </div>
+        </div>
+
+        <!-- Text Diff -->
+        <div class="tool-panel" id="panel-diff">
+            <div class="diff-grid">
+                <div class="glass-card"><label>Original Text</label><textarea id="diffOriginal" rows="8" placeholder="Paste original text..."></textarea></div>
+                <div class="glass-card"><label>Modified Text</label><textarea id="diffModified" rows="8" placeholder="Paste modified text..."></textarea></div>
+            </div>
+            <button class="btn btn-primary mt-2" id="diffBtn">🔍 Compare</button>
+            <div class="glass-card mt-3" id="diffOutput"><p class="text-muted">Click Compare to see differences</p></div>
+        </div>
+
+        <!-- Hash Generator -->
+        <div class="tool-panel" id="panel-hash">
+            <div class="glass-card">
+                <button class="btn btn-primary" id="hashBtn">🔐 Generate Hashes</button>
+                <div class="hash-results mt-3" id="hashResults"></div>
+            </div>
+        </div>
+
+        <!-- Encode/Decode -->
+        <div class="tool-panel" id="panel-encode">
+            <div class="encode-btns">
+                <button class="btn btn-secondary" data-enc="base64enc">Base64 Encode</button>
+                <button class="btn btn-secondary" data-enc="base64dec">Base64 Decode</button>
+                <button class="btn btn-secondary" data-enc="urlenc">URL Encode</button>
+                <button class="btn btn-secondary" data-enc="urldec">URL Decode</button>
+                <button class="btn btn-secondary" data-enc="htmlenc">HTML Encode</button>
+                <button class="btn btn-secondary" data-enc="htmldec">HTML Decode</button>
+                <button class="btn btn-secondary" data-enc="rot13">ROT13</button>
+                <button class="btn btn-secondary" data-enc="reverse">Reverse</button>
+                <button class="btn btn-secondary" data-enc="binary">Binary</button>
+                <button class="btn btn-secondary" data-enc="hex">Hex</button>
+            </div>
+            <div class="glass-card mt-3"><label>Result</label><textarea id="encodeOutput" rows="6" readonly></textarea>
+            <button class="btn btn-primary btn-sm mt-2" id="copyEncBtn">📋 Copy</button></div>
+        </div>
+
+        <!-- Lorem Ipsum -->
+        <div class="tool-panel" id="panel-lorem">
+            <div class="glass-card">
+                <div class="lorem-controls">
+                    <label>Count<input type="number" id="loremCount" value="5" min="1" max="100"></label>
+                    <label>Type<select id="loremType"><option value="paragraphs">Paragraphs</option><option value="sentences">Sentences</option><option value="words">Words</option></select></label>
+                    <button class="btn btn-primary" id="loremBtn">Generate</button>
+                </div>
+                <textarea id="loremOutput" rows="10" readonly class="mt-2"></textarea>
+                <button class="btn btn-primary btn-sm mt-2" id="copyLoremBtn">📋 Copy</button>
+            </div>
+        </div>
+
+        <!-- Sort Lines -->
+        <div class="tool-panel" id="panel-sort">
+            <div class="glass-card">
+                <div class="sort-btns">
+                    <button class="btn btn-secondary" data-sort="az">A → Z</button>
+                    <button class="btn btn-secondary" data-sort="za">Z → A</button>
+                    <button class="btn btn-secondary" data-sort="num">Numeric</button>
+                    <button class="btn btn-secondary" data-sort="length">By Length</button>
+                    <button class="btn btn-secondary" data-sort="reverse">Reverse</button>
+                    <button class="btn btn-secondary" data-sort="shuffle">Shuffle</button>
+                    <button class="btn btn-secondary" data-sort="unique">Remove Duplicates</button>
+                    <button class="btn btn-secondary" data-sort="empty">Remove Empty Lines</button>
+                    <button class="btn btn-secondary" data-sort="trim">Trim Lines</button>
+                    <button class="btn btn-secondary" data-sort="number">Number Lines</button>
+                </div>
+                <textarea id="sortOutput" rows="8" readonly class="mt-2"></textarea>
+            </div>
+        </div>
+
+        <!-- Markdown Preview -->
+        <div class="tool-panel" id="panel-markdown">
+            <div class="glass-card"><h4>Markdown Preview</h4><div id="markdownPreview" class="md-preview"></div></div>
+        </div>
+
+        <!-- Slug Generator -->
+        <div class="tool-panel" id="panel-slug">
+            <div class="glass-card">
+                <div class="slug-results">
+                    <label>URL Slug<input type="text" id="slugUrl" readonly></label>
+                    <label>Filename Safe<input type="text" id="slugFile" readonly></label>
+                    <label>CSS Class<input type="text" id="slugCss" readonly></label>
+                    <label>Constant Name<input type="text" id="slugConst" readonly></label>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer"><div class="container copyright">© 2026 QuickUtils. All rights reserved.</div></footer>
+    <script src="quickutils-core.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
